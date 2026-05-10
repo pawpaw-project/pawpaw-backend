@@ -1,0 +1,182 @@
+@startuml
+left to right direction
+hide circle
+skinparam linetype ortho
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam roundcorner 12
+skinparam defaultFontName Pretendard
+skinparam package {
+  BackgroundColor #FAFAFA
+  BorderColor #BDBDBD
+  FontColor #222222
+}
+skinparam entity {
+  BackgroundColor white
+  BorderColor #666666
+  FontColor #222222
+  HeaderBackgroundColor #F3F4F6
+}
+
+package "User" {
+  entity "users" as users {
+    * id : BIGINT <<PK>>
+    --
+    email : VARCHAR
+    password : VARCHAR
+    nickname : VARCHAR
+    profile_image_url : VARCHAR
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  entity "refresh_tokens" as refresh_tokens {
+    * id : BIGINT <<PK>>
+    --
+    user_id : BIGINT <<FK>>
+    refresh_token : VARCHAR
+    expires_at : DATETIME
+    created_at : DATETIME
+  }
+
+  entity "pets" as pets {
+    * id : BIGINT <<PK>>
+    --
+    user_id : BIGINT <<FK>>
+    name : VARCHAR
+    breed : VARCHAR
+    gender : VARCHAR
+    age : INT
+    weight : DECIMAL
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+}
+
+package "Community" {
+  entity "posts" as posts {
+    * id : BIGINT <<PK>>
+    --
+    user_id : BIGINT <<FK>>
+    title : VARCHAR
+    content : TEXT
+    category : VARCHAR
+    view_count : INT
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  entity "comments" as comments {
+    * id : BIGINT <<PK>>
+    --
+    post_id : BIGINT <<FK>>
+    user_id : BIGINT <<FK>>
+    content : TEXT
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  entity "post_likes" as post_likes {
+    * id : BIGINT <<PK>>
+    --
+    post_id : BIGINT <<FK>>
+    user_id : BIGINT <<FK>>
+    created_at : DATETIME
+  }
+}
+
+package "Walk Matching" {
+  entity "walk_requests" as walk_requests {
+    * id : BIGINT <<PK>>
+    --
+    user_id : BIGINT <<FK>>
+    pet_id : BIGINT <<FK>>
+    title : VARCHAR
+    content : TEXT
+    region : VARCHAR
+    preferred_time : DATETIME
+    status : VARCHAR
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  entity "walk_applications" as walk_applications {
+    * id : BIGINT <<PK>>
+    --
+    walk_request_id : BIGINT <<FK>>
+    user_id : BIGINT <<FK>>
+    message : TEXT
+    status : VARCHAR
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+}
+
+package "Chat" {
+  entity "chat_rooms" as chat_rooms {
+    * id : BIGINT <<PK>>
+    --
+    walk_application_id : BIGINT <<FK>>
+    created_at : DATETIME
+  }
+
+  entity "messages" as messages {
+    * id : BIGINT <<PK>>
+    --
+    chat_room_id : BIGINT <<FK>>
+    sender_id : BIGINT <<FK>>
+    content : TEXT
+    created_at : DATETIME
+    read_at : DATETIME
+  }
+}
+
+package "Hospital Review" {
+  entity "hospitals" as hospitals {
+    * id : BIGINT <<PK>>
+    --
+    kakao_place_id : VARCHAR
+    name : VARCHAR
+    address : VARCHAR
+    phone : VARCHAR
+    latitude : DECIMAL
+    longitude : DECIMAL
+    place_url : VARCHAR
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+
+  entity "hospital_reviews" as hospital_reviews {
+    * id : BIGINT <<PK>>
+    --
+    hospital_id : BIGINT <<FK>>
+    user_id : BIGINT <<FK>>
+    rating : INT
+    content : TEXT
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+}
+
+users ||--o{ refresh_tokens : has
+users ||--o{ pets : owns
+
+users ||--o{ posts : writes
+posts ||--o{ comments : has
+users ||--o{ comments : writes
+posts ||--o{ post_likes : liked_by
+users ||--o{ post_likes : likes
+
+users ||--o{ walk_requests : creates
+pets ||--o{ walk_requests : for
+walk_requests ||--o{ walk_applications : receives
+users ||--o{ walk_applications : applies
+
+walk_applications ||--|| chat_rooms : creates
+chat_rooms ||--o{ messages : has
+users ||--o{ messages : sends
+
+hospitals ||--o{ hospital_reviews : has
+users ||--o{ hospital_reviews : writes
+
+@enduml

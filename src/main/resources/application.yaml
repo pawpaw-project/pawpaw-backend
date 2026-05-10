@@ -6,9 +6,11 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     show-sql: true
 
 server:
   port: 8080
+
+kakao:
+  rest-api-key: ${KAKAO_REST_API_KEY:}
