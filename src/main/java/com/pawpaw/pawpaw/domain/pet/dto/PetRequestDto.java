@@ -1,5 +1,6 @@
 package com.pawpaw.pawpaw.domain.pet.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
@@ -13,6 +14,8 @@ public class PetRequestDto {
     private String species;
 
     private String breed;
+
+    @Min(0)
     private Integer age;
     private String gender;
     private Double weight;

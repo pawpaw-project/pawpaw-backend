@@ -22,7 +22,7 @@ public class PetResponseDto {
         this.name = pet.getName();
         this.species = pet.getSpecies();
         this.breed = pet.getBreed();
-        this.age = pet.getAge();
+        this.age = pet.getAge() != null ? Math.max(0, pet.getAge()) : null;
         this.gender = pet.getGender();
         this.weight = pet.getWeight();
         this.photoUrl = pet.getPhotoUrl();

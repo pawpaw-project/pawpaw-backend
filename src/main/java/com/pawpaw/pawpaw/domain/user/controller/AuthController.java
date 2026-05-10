@@ -1,5 +1,6 @@
 package com.pawpaw.pawpaw.domain.user.controller;
 
+import com.pawpaw.pawpaw.domain.user.dto.KakaoLoginRequestDto;
 import com.pawpaw.pawpaw.domain.user.dto.LoginRequestDto;
 import com.pawpaw.pawpaw.domain.user.dto.SignUpRequestDto;
 import com.pawpaw.pawpaw.domain.user.dto.TokenResponseDto;
@@ -25,6 +26,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto dto) {
         return ResponseEntity.ok(authService.login(dto));
+    }
+
+    @PostMapping("/kakao")
+    public ResponseEntity<TokenResponseDto> kakaoLogin(@Valid @RequestBody KakaoLoginRequestDto dto) {
+        return ResponseEntity.ok(authService.kakaoLogin(dto));
     }
 
     @PostMapping("/reissue")

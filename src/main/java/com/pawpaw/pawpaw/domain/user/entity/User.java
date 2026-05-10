@@ -24,11 +24,13 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, unique = true)
     private String nickname;
+
+    @Column(unique = true)
+    private Long kakaoId;
 
     private String profileImg;
 

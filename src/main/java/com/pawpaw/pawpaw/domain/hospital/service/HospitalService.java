@@ -32,7 +32,7 @@ public class HospitalService {
     private String kakaoRestApiKey;
 
     public List<HospitalResponseDto> searchHospitals(String query) {
-        String url = "https://dapi.kakao.com/v2/local/search/keyword.json?query=" + query + "+동물병원&size=15";
+        String url = "https://dapi.kakao.com/v2/local/search/keyword.json?query=" + query + "+동물병원&size=10";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "KakaoAK " + kakaoRestApiKey);
@@ -46,20 +46,17 @@ public class HospitalService {
         }
 
         return response.getBody().getDocuments().stream()
-                .map(item -> {
-                    String name = item.getPlaceName();
-                    String address = (item.getRoadAddressName() == null || item.getRoadAddressName().isEmpty())
-                            ? item.getAddressName() : item.getRoadAddressName();
-
-                    Hospital hospital = hospitalRepository.findByNameAndAddress(name, address)
-                            .orElseGet(() -> hospitalRepository.save(Hospital.builder()
-                                    .name(name)
-                                    .address(address)
-                                    .lat(Double.parseDouble(item.getY()))
-                                    .lng(Double.parseDouble(item.getX()))
-                                    .phone(item.getPhone())
-                                    .build()));
-                    return new HospitalResponseDto(hospital);
+                .map(doc -> {
+                    String address = doc.getRoadAddressName() != null && !doc.getRoadAddressName().isEmpty()
+                            ? doc.getRoadAddressName() : doc.getAddressName();
+                    Hospital hospital = Hospital.builder()
+                            .name(doc.getPlaceName())
+                            .address(address)
+                            .lat(Double.parseDouble(doc.getY()))
+                            .lng(Double.parseDouble(doc.getX()))
+                            .phone(doc.getPhone())
+                            .build();
+                    return new HospitalResponseDto(hospitalRepository.save(hospital));
                 })
                 .collect(Collectors.toList());
     }
