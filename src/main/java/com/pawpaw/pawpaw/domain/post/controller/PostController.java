@@ -28,16 +28,19 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getAllPosts(
-            @RequestParam(required = false) String category) {
+            @RequestParam(required = false) String category,
+            @AuthenticationPrincipal User user) {
         if (category != null) {
-            return ResponseEntity.ok(postService.getPostsByCategory(category));
+            return ResponseEntity.ok(postService.getPostsByCategory(category, user));
         }
-        return ResponseEntity.ok(postService.getAllPosts());
+        return ResponseEntity.ok(postService.getAllPosts(user));
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
-        return ResponseEntity.ok(postService.getPost(postId));
+    public ResponseEntity<PostResponseDto> getPost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(postService.getPost(postId, user));
     }
 
     @PutMapping("/{postId}")
