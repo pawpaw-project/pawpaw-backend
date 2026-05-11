@@ -1,5 +1,6 @@
 package com.pawpaw.pawpaw.domain.post.controller;
 
+import com.pawpaw.pawpaw.domain.post.dto.PostResponseDto;
 import com.pawpaw.pawpaw.domain.post.service.PostLikeService;
 import com.pawpaw.pawpaw.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,9 @@ public class PostLikeController {
     private final PostLikeService postLikeService;
 
     @PostMapping("/{postId}/likes")
-    public ResponseEntity<String> toggleLike(
+    public ResponseEntity<PostResponseDto> toggleLike(
             @PathVariable Long postId,
             @AuthenticationPrincipal User user) {
-        boolean liked = postLikeService.toggleLike(postId, user);
-        return ResponseEntity.ok(liked ? "좋아요" : "좋아요 취소");
+        return ResponseEntity.ok(postLikeService.toggleLike(postId, user));
     }
 }

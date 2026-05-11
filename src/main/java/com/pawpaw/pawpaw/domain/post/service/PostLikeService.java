@@ -1,5 +1,6 @@
 package com.pawpaw.pawpaw.domain.post.service;
 
+import com.pawpaw.pawpaw.domain.post.dto.PostResponseDto;
 import com.pawpaw.pawpaw.domain.post.entity.Post;
 import com.pawpaw.pawpaw.domain.post.entity.PostLike;
 import com.pawpaw.pawpaw.domain.post.repository.PostLikeRepository;
@@ -17,19 +18,22 @@ public class PostLikeService {
     private final PostRepository postRepository;
 
     @Transactional
-    public boolean toggleLike(Long postId, User user) {
+    public PostResponseDto toggleLike(Long postId, User user) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
+        boolean likedByMe;
         if (postLikeRepository.existsByPostIdAndUserId(postId, user.getId())) {
             postLikeRepository.deleteByPostIdAndUserId(postId, user.getId());
-            return false;
+            likedByMe = false;
         } else {
             postLikeRepository.save(PostLike.builder()
                     .post(post)
                     .user(user)
                     .build());
-            return true;
+            likedByMe = true;
         }
+
+        return new PostResponseDto(post, likedByMe);
     }
 }

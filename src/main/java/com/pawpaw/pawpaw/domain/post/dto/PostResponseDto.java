@@ -15,8 +15,13 @@ public class PostResponseDto {
     private String nickname;
     private LocalDateTime createdAt;
     private int likeCount;
+    private boolean likedByMe;
 
     public PostResponseDto(Post post) {
+        this(post, false);
+    }
+
+    public PostResponseDto(Post post, boolean likedByMe) {
         this.id = post.getId();
         this.category = post.getCategory();
         this.title = post.getTitle();
@@ -24,5 +29,6 @@ public class PostResponseDto {
         this.nickname = post.getUser().getNickname();
         this.createdAt = post.getCreatedAt();
         this.likeCount = post.getLikes().size();
+        this.likedByMe = likedByMe;
     }
 }
