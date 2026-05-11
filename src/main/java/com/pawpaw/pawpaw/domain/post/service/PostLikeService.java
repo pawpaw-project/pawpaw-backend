@@ -34,6 +34,7 @@ public class PostLikeService {
             likedByMe = true;
         }
 
-        return new PostResponseDto(post, likedByMe);
+        long likeCount = postLikeRepository.countByPostId(postId);
+        return new PostResponseDto(post, likedByMe, likeCount);
     }
 }

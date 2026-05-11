@@ -18,17 +18,21 @@ public class PostResponseDto {
     private boolean likedByMe;
 
     public PostResponseDto(Post post) {
-        this(post, false);
+        this(post, false, post.getLikes().size());
     }
 
     public PostResponseDto(Post post, boolean likedByMe) {
+        this(post, likedByMe, post.getLikes().size());
+    }
+
+    public PostResponseDto(Post post, boolean likedByMe, long likeCount) {
         this.id = post.getId();
         this.category = post.getCategory();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.nickname = post.getUser().getNickname();
         this.createdAt = post.getCreatedAt();
-        this.likeCount = post.getLikes().size();
+        this.likeCount = (int) likeCount;
         this.likedByMe = likedByMe;
     }
 }
